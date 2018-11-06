@@ -49,10 +49,10 @@ public class MainCalander extends AppCompatActivity {
 
         ArrayList<String> dayList = new ArrayList<String>();
 
-        Calendar cal = Calendar.getInstance(Locale.KOREA);
-        int startDay = cal.get(Calendar.DAY_OF_WEEK); // 월 시작 요일
+        Calendar cal = new GregorianCalendar(Locale.KOREA);
+        int startDay = cal.get(Calendar.DAY_OF_WEEK); // 월 시작 요
         int lastDay = cal.getActualMaximum(Calendar.DATE); // 월 마지막 날짜
-        for (int i = 0; i < startDay; i++) {
+        for (int i = 0; i <= startDay; i++) {
             dayList.add(" ");
         }
         for (int i = 1; i <= lastDay; i++) {
