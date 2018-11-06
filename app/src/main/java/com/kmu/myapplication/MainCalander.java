@@ -64,6 +64,9 @@ public class MainCalander extends AppCompatActivity {
             String day = String.valueOf(i);
             dayList.add(day);
         }
+        for(int i=0;i <((lastDay+startDay)/7) - 3;i++){
+            dayList.add(" ");
+        }
         CalenderAdapter calenderAdapter = new CalenderAdapter(getApplicationContext(),dayList);
         mainCalender.setAdapter(calenderAdapter);
         GridView weekday = findViewById(R.id.weekday);
