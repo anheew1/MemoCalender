@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <TextView
-        android:id="@+id/daylayout"
-        android:height="90dp"
+        android:id="@+id/weekdaylayout"
+        android:height="30dp"
+        android:textSize="12dp"
         android:layout_width="wrap_content"
-        android:gravity="right"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

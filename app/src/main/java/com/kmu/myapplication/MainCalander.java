@@ -52,6 +52,11 @@ public class MainCalander extends AppCompatActivity {
         Calendar cal = new GregorianCalendar(Locale.KOREA);
         int startDay = cal.get(Calendar.DAY_OF_WEEK); // 월 시작 요
         int lastDay = cal.getActualMaximum(Calendar.DATE); // 월 마지막 날짜
+
+        TextView ymdate = (TextView) findViewById(R.id.ymdate);
+        String symdate=cal.get(Calendar.YEAR)+ "년 " +(cal.get(Calendar.MONTH)+1)+"월";
+        ymdate.setText(symdate);
+
         for (int i = 0; i <= startDay; i++) {
             dayList.add(" ");
         }
@@ -61,6 +66,11 @@ public class MainCalander extends AppCompatActivity {
         }
         CalenderAdapter calenderAdapter = new CalenderAdapter(getApplicationContext(),dayList);
         mainCalender.setAdapter(calenderAdapter);
+        GridView weekday = findViewById(R.id.weekday);
+        WeekdayAdapter weekdayAdapter = new WeekdayAdapter(getApplicationContext(),weekdayList);
+        weekday.setAdapter(weekdayAdapter);
+
+
     }
     public class CalenderAdapter extends BaseAdapter{
         private List list;
@@ -115,14 +125,39 @@ public class MainCalander extends AppCompatActivity {
             Integer today = calendar.get(Calendar.DAY_OF_MONTH);
             String sToday = String.valueOf(today);
             if (sToday.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
-
                 holder.text.setTextColor(Color.BLACK);
             }
-
-
-
             return convertView;
 }
+    }
+    protected class WeekdayAdapter extends CalenderAdapter{
+        private List list;
+        private Context context;
+        private LayoutInflater inflater;
+        public WeekdayAdapter(Context context, List<String> list) {
+            super(context,list);
+            this.list =list;
+            this.context = context;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+
+            if(convertView == null){
+                convertView = inflater.inflate(R.layout.weekday,parent,false);
+                holder = new ViewHolder();
+                holder.text = (TextView)convertView.findViewById(R.id.weekdaylayout);
+                convertView.setTag(holder);
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.text.setText(String.valueOf(getItem(position)));
+
+            return convertView;
+        }
     }
 private class ViewHolder{
     TextView text;

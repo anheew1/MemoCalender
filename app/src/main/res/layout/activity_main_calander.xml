@@ -14,21 +14,23 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        <TextView
+            android:id="@+id/ymdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="우왁굳"
+            android:textColor="@color/colorWhite"
+            android:textSize="20dp"
+            android:layout_marginLeft="90dp"
+            />
 
     </android.support.v7.widget.Toolbar>
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="우왁굳"
-        android:layout_marginLeft="90dp"
-        />
+
 
     <GridView
         android:id="@+id/weekday"
         android:layout_width="368dp"
-        android:layout_height="10dp"
-        android:gravity="start"
+        android:layout_height="15dp"
         android:numColumns="7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,11 +40,11 @@
         android:id="@+id/calendar"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
-        android:gravity="start"
-        android:horizontalSpacing="30dp"
         android:numColumns="7"
-        android:verticalSpacing="24dp"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
