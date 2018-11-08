@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MainCalander extends AppCompatActivity {
-    private int COUNT = 100;
+    private int COUNT = 200;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +47,8 @@ public class MainCalander extends AppCompatActivity {
 
         final ViewPager viewPager= (ViewPager) findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setCurrentItem(1);
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setCurrentItem(COUNT);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -18,6 +18,7 @@ import java.util.Locale;
 public class FragCalander extends Fragment {
     private int year ,month, date, position;
     private View rootView;
+    private int COUNT = 200;
     static  FragCalander newInstance(int position){
         FragCalander fc = new FragCalander();
         Bundle args = new Bundle();
@@ -42,14 +43,21 @@ public class FragCalander extends Fragment {
         year = cal.get(Calendar.YEAR);
         date = cal.get(Calendar.DATE);
 
-        if(position==1){
-            month+=1;
-            if(month>11) {
-                month=0;
+        if(position > 0 && position < 100){
+            month += position;
+            while(month > 11) {
+                month-=12;
                 year+=1;
             }
-
         }
+        else if(position >100 ){
+            month -= COUNT-position;
+            while(month <0 ){
+                month+=12;
+                year-=1;
+            }
+        }
+
 
 
         cal.set(year,month-1,date);
@@ -59,9 +67,10 @@ public class FragCalander extends Fragment {
         int startDay =cal.get(Calendar.DAY_OF_WEEK); // 월 시작 요일
         int lastDay = cal.getActualMaximum(Calendar.DATE); // 월 마지막 날짜
 
-        GridView gridview = (GridView) getActivity().findViewById(R.id.calendar);
+        GridView gridview = (GridView) rootView.findViewById(R.id.calendar);
         TextView ymdate = (TextView) getActivity().findViewById(R.id.ymdate);
         String symdate=year+ "년 " +(month+1)+"월";
+
         ymdate.setText(symdate);
         ArrayList<String> dayList = new ArrayList<>();
 

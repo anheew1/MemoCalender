@@ -53,6 +53,7 @@ public class CalenderAdapter extends BaseAdapter {
         }
         holder.text.setText(String.valueOf(getItem(position)));
 
+
         if(position%7==0){
             holder.text.setTextColor(Color.RED);
         }

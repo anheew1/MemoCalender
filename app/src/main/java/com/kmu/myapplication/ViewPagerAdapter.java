@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int COUNT = 100;
-    private ArrayList<FragCalander> fragcalanderList;
+    private static int COUNT = 200;
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
