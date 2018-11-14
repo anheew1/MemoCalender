@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -11,10 +12,14 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class MainCalander extends AppCompatActivity {
     private int COUNT = 200;
@@ -30,55 +35,20 @@ public class MainCalander extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dehaze_black_18dp);
         getSupportActionBar().setTitle("");
 
-        ArrayList<String> weekdayList = new ArrayList<String>();
-        weekdayList.add("일");
-        weekdayList.add("월");
-        weekdayList.add("화");
-        weekdayList.add("수");
-        weekdayList.add("목");
-        weekdayList.add("금");
-        weekdayList.add("토");
-
-        // Calender is add by FragCalander
-
-        GridView weekday = findViewById(R.id.weekday);
-        WeekdayAdapter weekdayAdapter = new WeekdayAdapter(getApplicationContext(),weekdayList);
-        weekday.setAdapter(weekdayAdapter);
-
-        final ViewPager viewPager= (ViewPager) findViewById(R.id.viewpager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setCurrentItem(COUNT);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        CompactCalendarView compactCalendarView =  (CompactCalendarView) findViewById(R.id.customcalendar_view);
+        compactCalendarView.setLocale(TimeZone.getTimeZone("Asia/Seoul"),Locale.KOREA);
+        compactCalendarView.setFirstDayOfWeek(1);
+        compactCalendarView.setUseThreeLetterAbbreviation(true);
+        compactCalendarView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            public void onFocusChange(View v, boolean hasFocus) {
 
             }
+        })
 
-            @Override
-            public void onPageSelected(int position) {
-                if(position < COUNT){
-                    viewPager.setCurrentItem(position+COUNT,false);
-                }
-                else if (position >= COUNT*2){
-                    viewPager.setCurrentItem(position-COUNT,false);
-                }
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int i) {
 
-            }
-        });
     }
-
-
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
