@@ -29,20 +29,20 @@
     <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/customcalendar_view"
         android:layout_width="fill_parent"
-        android:layout_height="550dp"
+        android:layout_height="0dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:compactCalendarBackgroundColor="#ffffff"
         app:compactCalendarCurrentDayBackgroundColor="#ffffff"
-        app:compactCalendarTargetHeight="550dp"
+        app:compactCalendarTargetHeight="0dp"
         app:compactCalendarTextColor="#000000"
         app:compactCalendarTextSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="10"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </android.support.constraint.ConstraintLayout>
