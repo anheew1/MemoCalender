@@ -51,7 +51,18 @@ public class AddEvent extends Activity {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent eventIntent = new Intent(AddEvent.this, MainCalander.class);
+                // add eventName
+                EditText eventName = findViewById(R.id.edit_eventName);
+                eventIntent.putExtra("eventName",eventName.getText());
+                //add eventDate
+                eventIntent.putExtra("eventDate",strDate);
+                //add eventMemo
+                EditText eventMemo = findViewById(R.id.edit_eventMemo);
+                eventIntent.putExtra("eventMemo",eventMemo.getText());
 
+                setResult(RESULT_OK,eventIntent);
+                finish();
             }
         });
     }

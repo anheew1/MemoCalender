@@ -1,7 +1,9 @@
 package com.kmu.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +18,10 @@ import android.widget.TextView;
 
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -28,7 +32,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MainCalander extends AppCompatActivity {
-    private int COUNT = 200;
+    static int ADD_EVENT = 0;
     private TextView ymdate;
     private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
@@ -55,6 +59,8 @@ public class MainCalander extends AppCompatActivity {
         compactCalendarView.setLocale(TimeZone.getDefault(),Locale.KOREA);
         compactCalendarView.setFirstDayOfWeek(1);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
+        compactCalendarView.setCurrentDayIndicatorStyle(CompactCalendarView.FILL_LARGE_INDICATOR);
+        compactCalendarView.setCurrentDayBackgroundColor(CompactCalendarView.AUTOFILL_TYPE_NONE);
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
 
             @Override
@@ -81,7 +87,14 @@ public class MainCalander extends AppCompatActivity {
         ymdate.setText(simpleMonthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth()));
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == ADD_EVENT){
+            if(resultCode == RESULT_OK){
+                createEvent(data.getExtras());
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,8 +111,27 @@ public class MainCalander extends AppCompatActivity {
 
             String dateString = simpleDateFormat.format(selectedDate);
             intent.putExtra("selectedDate",dateString);
-            startActivity(intent);
+            startActivityForResult(intent,ADD_EVENT);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void createEvent(Bundle extras){
+        String eventName = extras.getString("eventName");
+        if(eventName == null) eventName = "";
+        String eventDate = extras.getString("eventDate");
+
+        String eventMemo = extras.getString("eventMemo");
+        if(eventMemo == null) eventMemo = "";
+        try {
+            Date newdate = simpleDateFormat.parse(eventDate);
+            Event newEvent = new Event(Color.RED,newdate.getTime(),extras);
+            compactCalendarView.addEvent(newEvent);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        Log.d("eventmsg",eventName+","+eventDate+","+eventMemo);
+
     }
 }
