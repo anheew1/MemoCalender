@@ -18,7 +18,7 @@
         </activity>
         <activity
             android:name=".AddEvent"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog">
+            android:theme="@style/Animation.AppCompat.DropDownUp">
         </activity>
     </application>
 

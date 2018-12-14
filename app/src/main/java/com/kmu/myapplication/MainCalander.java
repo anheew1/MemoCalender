@@ -30,12 +30,17 @@ import java.util.TimeZone;
 public class MainCalander extends AppCompatActivity {
     private int COUNT = 200;
     private TextView ymdate;
+    private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.KOREA);
     private CompactCalendarView compactCalendarView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_calander);
+
+        // Constructing
+        selectedDate = new Date();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -55,6 +60,7 @@ public class MainCalander extends AppCompatActivity {
             @Override
             public void onDayClick(Date dateClicked) {
                 ymdate.setText(simpleMonthFormat.format(dateClicked));
+                selectedDate = dateClicked;
                 Log.d("dateclick",dateClicked+"");
             }
 
@@ -89,6 +95,9 @@ public class MainCalander extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_addEvent){
             Intent intent = new Intent(this,AddEvent.class);
+
+            String dateString = simpleDateFormat.format(selectedDate);
+            intent.putExtra("selectedDate",dateString);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
