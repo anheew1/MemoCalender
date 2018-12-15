@@ -54,12 +54,13 @@ public class AddEvent extends Activity {
                 Intent eventIntent = new Intent(AddEvent.this, MainCalander.class);
                 // add eventName
                 EditText eventName = findViewById(R.id.edit_eventName);
-                eventIntent.putExtra("eventName",eventName.getText());
+                eventIntent.putExtra("eventName",eventName.getText().toString());
+                Log.d("name",eventName.getText().toString());
                 //add eventDate
                 eventIntent.putExtra("eventDate",strDate);
                 //add eventMemo
                 EditText eventMemo = findViewById(R.id.edit_eventMemo);
-                eventIntent.putExtra("eventMemo",eventMemo.getText());
+                eventIntent.putExtra("eventMemo",eventMemo.getText().toString());
 
                 setResult(RESULT_OK,eventIntent);
                 finish();

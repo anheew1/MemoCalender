@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
     private Context context;
     public HorizontalAdapter(ArrayList<EventData> list, Context context){
         eventDataArrayList = list;
+        Log.d("firstDATA",eventDataArrayList.get(1).toString());
         this.context = context;
     }
 
@@ -35,9 +37,9 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
         EventData data = eventDataArrayList.get(position);
 
+
         holder.date.setText(data.getDate());
         holder.name.setText(data.getName());
-        holder.memo.setText(data.getMemo());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +55,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
     public int getItemCount() {
         return eventDataArrayList.size();
     }
+
 }
 class HorizontalViewHolder extends RecyclerView.ViewHolder {
     public TextView name;

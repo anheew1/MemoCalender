@@ -1,6 +1,8 @@
 package com.kmu.myapplication;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +39,9 @@ import java.util.TimeZone;
 public class MainCalander extends AppCompatActivity {
     static int ADD_EVENT = 0;
     static int SHOW_EVENT_INFO = 1;
+
+    static int RESULT_REMOVE_EVENT = 101;
+    static int RESULT_MODIFY_EVENT = 102;
     private TextView ymdate;
     private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
@@ -45,6 +50,9 @@ public class MainCalander extends AppCompatActivity {
     private LinearLayout horizontalLayout;
     private RecyclerView horizontalView;
     private HorizontalAdapter horizontalAdapter;
+    private DBHelper helper;
+    private Cursor cursor;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +93,24 @@ public class MainCalander extends AppCompatActivity {
         ArrayList<EventData> dataArrayList = new ArrayList<>();
 
         //DATABASE data.add
+        helper = new DBHelper(this);
+        db = helper.getWritableDatabase();
+
+        cursor = db.rawQuery("SELECT *FROM events",null);
+        int dblength=0;
+        while ( cursor.moveToNext()){
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            String date = cursor.getString(2);
+            String memo = cursor.getString(3);
+
+
+            EventData eventData = new EventData(name,date,memo,id);
+            dataArrayList.add(eventData);
+            dblength++;
+        }
+        Log.d("dblength",String.valueOf(dblength));
+
 
         horizontalLayout = (LinearLayout) findViewById(R.id.horizontal_event_layout);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
@@ -93,6 +119,7 @@ public class MainCalander extends AppCompatActivity {
         horizontalAdapter = new HorizontalAdapter(dataArrayList,getApplicationContext());
 
         horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
+        horizontalView.setLayoutManager(linearLayoutManager);
         horizontalView.setAdapter(horizontalAdapter);
 
     }
@@ -108,6 +135,17 @@ public class MainCalander extends AppCompatActivity {
         if(requestCode == ADD_EVENT){
             if(resultCode == RESULT_OK){
                 createEvent(data.getExtras());
+            }
+        }
+        if(requestCode == SHOW_EVENT_INFO){
+            if(resultCode == RESULT_OK){
+
+            }
+            else if(resultCode == RESULT_REMOVE_EVENT){
+
+            }
+            else if(resultCode == RESULT_MODIFY_EVENT){
+
             }
         }
     }
@@ -134,15 +172,17 @@ public class MainCalander extends AppCompatActivity {
 
     public void createEvent(Bundle extras){
         String eventName = extras.getString("eventName");
-        if(eventName == null) eventName = "";
         String eventDate = extras.getString("eventDate");
-
         String eventMemo = extras.getString("eventMemo");
-        if(eventMemo == null) eventMemo = "";
+
         try {
             Date newdate = simpleDateFormat.parse(eventDate);
             Event newEvent = new Event(Color.RED,newdate.getTime(),extras);
             compactCalendarView.addEvent(newEvent);
+
+            // insert to DB
+            db.execSQL("INSERT INTO events VALUES (null, '"+ eventName+"','"+eventDate+"','"+eventMemo+"');");
+            Log.d("eventtodb",eventName+","+eventDate+","+eventMemo);
         }catch (ParseException e){
             e.printStackTrace();
         }

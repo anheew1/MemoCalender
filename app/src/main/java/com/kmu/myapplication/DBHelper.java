@@ -14,7 +14,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //reset code
 
        db.execSQL("CREATE TABLE IF NOT EXISTS events ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT, date TEXT, memo TEXT);");
     }
