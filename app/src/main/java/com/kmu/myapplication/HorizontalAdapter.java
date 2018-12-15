@@ -1,5 +1,8 @@
 package com.kmu.myapplication;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +15,10 @@ import java.util.List;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder>{
     private ArrayList<EventData> eventDataArrayList;
-    public HorizontalAdapter(ArrayList<EventData> list){
+    private Context context;
+    public HorizontalAdapter(ArrayList<EventData> list, Context context){
         eventDataArrayList = list;
+        this.context = context;
     }
 
     @NonNull
@@ -33,6 +38,14 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
         holder.date.setText(data.getDate());
         holder.name.setText(data.getName());
         holder.memo.setText(data.getMemo());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,ShowEventInfo.class);
+                ((Activity)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
+            }
+        });
     }
 
 
@@ -47,6 +60,8 @@ class HorizontalViewHolder extends RecyclerView.ViewHolder {
     public TextView memo;
     HorizontalViewHolder(View view){
         super(view);
+        name = (TextView) itemView.findViewById(R.id.item_name);
+        date = (TextView) itemView.findViewById(R.id.item_date);
 
     }
 }

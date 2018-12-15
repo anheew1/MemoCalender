@@ -36,6 +36,7 @@ import java.util.TimeZone;
 
 public class MainCalander extends AppCompatActivity {
     static int ADD_EVENT = 0;
+    static int SHOW_EVENT_INFO = 1;
     private TextView ymdate;
     private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
@@ -89,7 +90,7 @@ public class MainCalander extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        horizontalAdapter = new HorizontalAdapter(dataArrayList);
+        horizontalAdapter = new HorizontalAdapter(dataArrayList,getApplicationContext());
 
         horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
         horizontalView.setAdapter(horizontalAdapter);
@@ -131,7 +132,7 @@ public class MainCalander extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void createEvent(Bundle extras){
+    public void createEvent(Bundle extras){
         String eventName = extras.getString("eventName");
         if(eventName == null) eventName = "";
         String eventDate = extras.getString("eventDate");
@@ -147,6 +148,9 @@ public class MainCalander extends AppCompatActivity {
         }
 
         Log.d("eventmsg",eventName+","+eventDate+","+eventMemo);
+
+    }
+    public void showEventInfo(int position){
 
     }
 }
