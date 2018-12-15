@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -38,6 +41,9 @@ public class MainCalander extends AppCompatActivity {
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.KOREA);
     private CompactCalendarView compactCalendarView;
+    private LinearLayout horizontalLayout;
+    private RecyclerView horizontalView;
+    private HorizontalAdapter horizontalAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +66,6 @@ public class MainCalander extends AppCompatActivity {
         compactCalendarView.setFirstDayOfWeek(1);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
         compactCalendarView.setCurrentDayIndicatorStyle(CompactCalendarView.FILL_LARGE_INDICATOR);
-        compactCalendarView.setCurrentDayBackgroundColor(CompactCalendarView.AUTOFILL_TYPE_NONE);
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
 
             @Override
@@ -76,14 +81,24 @@ public class MainCalander extends AppCompatActivity {
             }
         });
 
+        ArrayList<EventData> dataArrayList = new ArrayList<>();
 
+        //DATABASE data.add
+
+        horizontalLayout = (LinearLayout) findViewById(R.id.horizontal_event_layout);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        horizontalAdapter = new HorizontalAdapter(dataArrayList);
+
+        horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
+        horizontalView.setAdapter(horizontalAdapter);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         ymdate.setText(simpleMonthFormat.format(compactCalendarView.getFirstDayOfCurrentMonth()));
     }
 

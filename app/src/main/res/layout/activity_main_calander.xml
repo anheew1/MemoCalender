@@ -29,24 +29,33 @@
     <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/customcalendar_view"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_height="350dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
 
+        android:paddingRight="10dp"
         app:compactCalendarBackgroundColor="#ffffff"
+        app:compactCalendarCurrentDayTextColor="#000000"
         app:compactCalendarCurrentSelectedDayBackgroundColor="#b4d6ec"
         app:compactCalendarEventIndicatorStyle="small_indicator"
         app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
+        app:compactCalendarTargetHeight="350dp"
         app:compactCalendarTextColor="#000000"
         app:compactCalendarTextSize="12sp"
-        app:compactCalendarCurrentDayTextColor="#e42020"
-        app:compactCalendarTargetHeight="400dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+<LinearLayout
+    android:id="@+id/horizontal_event_layout"
+    android:layout_width="match_parent"
+    android:layout_height="145dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/customcalendar_view" >
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/horizontal_event_view"
+        android:layout_width="match_parent"
+        android:layout_height="145dp"
+
+        />
+</LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>
