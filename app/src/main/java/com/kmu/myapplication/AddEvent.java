@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -51,9 +52,14 @@ public class AddEvent extends Activity {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText eventName = findViewById(R.id.edit_eventName);
+                if(eventName.getText().toString().equals("")){
+                    Toast noname = Toast.makeText(getApplicationContext(),"Write Event Name!",Toast.LENGTH_SHORT);
+                    noname.show();
+                    return;
+                }
                 Intent eventIntent = new Intent(AddEvent.this, MainCalander.class);
                 // add eventName
-                EditText eventName = findViewById(R.id.edit_eventName);
                 eventIntent.putExtra("eventName",eventName.getText().toString());
                 Log.d("name",eventName.getText().toString());
                 //add eventDate

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -74,7 +75,7 @@ public class MainCalander extends AppCompatActivity {
         compactCalendarView.setLocale(TimeZone.getDefault(),Locale.KOREA);
         compactCalendarView.setFirstDayOfWeek(1);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
-        compactCalendarView.setCurrentDayIndicatorStyle(CompactCalendarView.FILL_LARGE_INDICATOR);
+        compactCalendarView.setCurrentDayIndicatorStyle(CompactCalendarView.NO_FILL_LARGE_INDICATOR);
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
 
             @Override
@@ -87,10 +88,11 @@ public class MainCalander extends AppCompatActivity {
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 ymdate.setText(simpleMonthFormat.format(firstDayOfNewMonth));
+                showRecyclerEvents(firstDayOfNewMonth);
             }
         });
 
-        ArrayList<EventData> dataArrayList = new ArrayList<>();
+
 
         //DATABASE data.add
         helper = new DBHelper(this);
@@ -105,22 +107,27 @@ public class MainCalander extends AppCompatActivity {
             String memo = cursor.getString(3);
 
 
-            EventData eventData = new EventData(name,date,memo,id);
-            dataArrayList.add(eventData);
+
+            try{
+                Date addDate = simpleDateFormat.parse(date);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("eventName",name);
+                bundle.putString("eventDate",date);
+                bundle.putString("eventMemo",memo);
+                bundle.putInt("eventId",id);
+                Event event = new Event(Color.RED,addDate.getTime(),bundle);
+                compactCalendarView.addEvent(event);
+
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+
             dblength++;
         }
         Log.d("dblength",String.valueOf(dblength));
 
-
-        horizontalLayout = (LinearLayout) findViewById(R.id.horizontal_event_layout);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-        horizontalAdapter = new HorizontalAdapter(dataArrayList,getApplicationContext());
-
-        horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
-        horizontalView.setLayoutManager(linearLayoutManager);
-        horizontalView.setAdapter(horizontalAdapter);
+        showRecyclerEvents(compactCalendarView.getFirstDayOfCurrentMonth());
 
     }
 
@@ -174,15 +181,23 @@ public class MainCalander extends AppCompatActivity {
         String eventName = extras.getString("eventName");
         String eventDate = extras.getString("eventDate");
         String eventMemo = extras.getString("eventMemo");
+        int eventId= -1;
 
         try {
             Date newdate = simpleDateFormat.parse(eventDate);
+            // insert to DB
+            db.execSQL("INSERT INTO events VALUES (null, '"+ eventName+"','"+eventDate+"','"+eventMemo+"');");
+            cursor = db.rawQuery("SELECT LAST_INSERT_ROWID();",null);
+            if(cursor.moveToFirst())
+            eventId = cursor.getInt(0);
+
+            extras.putInt("eventId",eventId);
+            Log.d("eventID is",String.valueOf(eventId));
+
             Event newEvent = new Event(Color.RED,newdate.getTime(),extras);
             compactCalendarView.addEvent(newEvent);
 
-            // insert to DB
-            db.execSQL("INSERT INTO events VALUES (null, '"+ eventName+"','"+eventDate+"','"+eventMemo+"');");
-            Log.d("eventtodb",eventName+","+eventDate+","+eventMemo);
+            showRecyclerEvents(compactCalendarView.getFirstDayOfCurrentMonth());
         }catch (ParseException e){
             e.printStackTrace();
         }
@@ -190,6 +205,32 @@ public class MainCalander extends AppCompatActivity {
         Log.d("eventmsg",eventName+","+eventDate+","+eventMemo);
 
     }
+    public void showRecyclerEvents(Date date){
+        List<Event> events =compactCalendarView.getEventsForMonth(date);
+        ArrayList<EventData> dataArrayList = new ArrayList<>();
+        for(Event event: events){
+            Bundle extras = (Bundle) event.getData();
+            String sname = extras.getString("eventName");
+            String sdate = extras.getString("eventDate");
+            String smemo = extras.getString("eventMemo");
+            int sid = extras.getInt("eventId");
+
+            EventData eventData = new EventData(sname,sdate,smemo,sid);
+            dataArrayList.add(eventData);
+        }
+        horizontalLayout = (LinearLayout) findViewById(R.id.horizontal_event_layout);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        horizontalAdapter = new HorizontalAdapter(dataArrayList,getApplicationContext());
+
+        horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
+        horizontalView.setLayoutManager(linearLayoutManager);
+        horizontalView.setAdapter(horizontalAdapter);
+
+    }
+
+
     public void showEventInfo(int position){
 
     }

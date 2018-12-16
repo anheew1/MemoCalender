@@ -19,7 +19,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
     private Context context;
     public HorizontalAdapter(ArrayList<EventData> list, Context context){
         eventDataArrayList = list;
-        Log.d("firstDATA",eventDataArrayList.get(1).toString());
         this.context = context;
     }
 
@@ -45,6 +44,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,ShowEventInfo.class);
+                intent.putExtra("eventName",)
                 ((Activity)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
             }
         });
