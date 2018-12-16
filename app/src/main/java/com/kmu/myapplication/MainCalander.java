@@ -40,9 +40,7 @@ import java.util.TimeZone;
 public class MainCalander extends AppCompatActivity {
     static int ADD_EVENT = 0;
     static int SHOW_EVENT_INFO = 1;
-
     static int RESULT_REMOVE_EVENT = 101;
-    static int RESULT_MODIFY_EVENT = 102;
     private TextView ymdate;
     private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
@@ -75,7 +73,7 @@ public class MainCalander extends AppCompatActivity {
         compactCalendarView.setLocale(TimeZone.getDefault(),Locale.KOREA);
         compactCalendarView.setFirstDayOfWeek(1);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
-        compactCalendarView.setCurrentDayIndicatorStyle(CompactCalendarView.NO_FILL_LARGE_INDICATOR);
+        compactCalendarView.shouldDrawIndicatorsBelowSelectedDays(true);
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
 
             @Override
@@ -146,13 +144,10 @@ public class MainCalander extends AppCompatActivity {
         }
         if(requestCode == SHOW_EVENT_INFO){
             if(resultCode == RESULT_OK){
-
+                updateEvent(data.getExtras());
             }
             else if(resultCode == RESULT_REMOVE_EVENT){
-
-            }
-            else if(resultCode == RESULT_MODIFY_EVENT){
-
+                deleteEvent(data.getExtras());
             }
         }
     }
@@ -205,6 +200,53 @@ public class MainCalander extends AppCompatActivity {
         Log.d("eventmsg",eventName+","+eventDate+","+eventMemo);
 
     }
+    public void updateEvent(Bundle extras){
+        int eventId = extras.getInt("eventId");
+        String eventName = extras.getString("eventName");
+        String eventDate = extras.getString("eventDate");
+        String eventMemo = extras.getString("eventMemo");
+        try {
+            Date newdate = simpleDateFormat.parse(eventDate);
+            db.execSQL("UPDATE events SET name = '"+eventName+"', date = '"+eventDate+
+                    "', memo ='"+eventMemo+"' WHERE id ='"+eventId+"';");
+            for ( Event event : compactCalendarView.getEvents(newdate)){
+                Bundle eventData = (Bundle) event.getData();
+                if(eventData.getInt("eventId") == eventId){
+                    compactCalendarView.removeEvent(event);
+                    extras.putString("eventName",eventName);
+                    extras.putString("eventDate",eventDate);
+                    extras.putString("eventMemo",eventMemo);
+                    Event newEvent = new Event(Color.RED,newdate.getTime(),extras);
+                    compactCalendarView.addEvent(newEvent);
+                    showRecyclerEvents(compactCalendarView.getFirstDayOfCurrentMonth());
+
+                    Log.d("updateEvent","is Success, id: "+eventId);
+                    break;
+                }
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
+    public void deleteEvent(Bundle extras){
+        int eventId = extras.getInt("eventId");
+        String eventDate = extras.getString("eventDate");
+        try {
+            Date newdate = simpleDateFormat.parse(eventDate);
+            db.execSQL("DELETE FROM events WHERE id=" + eventId + " ;");
+            for (Event event : compactCalendarView.getEvents(newdate)) {
+                Bundle eventData = (Bundle) event.getData();
+                if(eventData.getInt("eventId") == eventId){
+                    compactCalendarView.removeEvent(event);
+                    showRecyclerEvents(compactCalendarView.getFirstDayOfCurrentMonth());
+                    Log.d("delEvent","is Success, id: "+eventId);
+                    break;
+                }
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
     public void showRecyclerEvents(Date date){
         List<Event> events =compactCalendarView.getEventsForMonth(date);
         ArrayList<EventData> dataArrayList = new ArrayList<>();
@@ -222,7 +264,7 @@ public class MainCalander extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(horizontalLayout.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        horizontalAdapter = new HorizontalAdapter(dataArrayList,getApplicationContext());
+        horizontalAdapter = new HorizontalAdapter(dataArrayList,this);
 
         horizontalView = (RecyclerView) findViewById(R.id.horizontal_event_view);
         horizontalView.setLayoutManager(linearLayoutManager);
@@ -230,8 +272,4 @@ public class MainCalander extends AppCompatActivity {
 
     }
 
-
-    public void showEventInfo(int position){
-
-    }
 }

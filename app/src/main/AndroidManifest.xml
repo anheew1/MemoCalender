@@ -18,8 +18,9 @@
         </activity>
         <activity
             android:name=".AddEvent"
-            android:theme="@style/Animation.AppCompat.DropDownUp">
-        </activity>
+            android:theme="@style/Animation.AppCompat.DropDownUp"/>
+
+        <activity android:name=".ShowEventInfo"/>
     </application>
 
 </manifest>

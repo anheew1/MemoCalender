@@ -34,18 +34,24 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
-        EventData data = eventDataArrayList.get(position);
+        final EventData data = eventDataArrayList.get(position);
 
 
         holder.date.setText(data.getDate());
         holder.name.setText(data.getName());
 
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(context,ShowEventInfo.class);
-                intent.putExtra("eventName",)
-                ((Activity)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
+                intent.putExtra("eventName",data.getName());
+                intent.putExtra("eventDate",data.getDate());
+                intent.putExtra("eventMemo",data.getMemo());
+                intent.putExtra("eventId",data.getId());
+                ((MainCalander)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
             }
         });
     }
