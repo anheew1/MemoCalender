@@ -1,75 +1,74 @@
 package com.kmu.myapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalViewHolder>{
+public class VerticalSearchAdapter extends RecyclerView.Adapter<VerticalSearchViewHolder> {
     private ArrayList<EventData> eventDataArrayList;
     private Context context;
-    public HorizontalAdapter(ArrayList<EventData> list, Context context){
+    public VerticalSearchAdapter(ArrayList<EventData> list, Context context){
         eventDataArrayList = list;
         this.context = context;
     }
-
     @NonNull
     @Override
-    public HorizontalViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public VerticalSearchViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.item_horizontal_event,viewGroup,false);
+        View view = inflater.inflate(R.layout.item_search_event,viewGroup,false);
 
-        HorizontalViewHolder viewHolder = new HorizontalViewHolder(view);
+        VerticalSearchViewHolder viewHolder = new VerticalSearchViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HorizontalViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VerticalSearchViewHolder holder, int position) {
         final EventData data = eventDataArrayList.get(position);
 
-
-        holder.date.setText(data.getDate());
         holder.name.setText(data.getName());
 
+        String[] dateParse = data.getDate().split("-");
+        String yearForm = dateParse[0]+"년";
+        String month_dayForm = dateParse[1]+"월" + dateParse[2]+ "일";
 
+        holder.year.setText(yearForm);
+        holder.month_day.setText(month_dayForm);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(context,ShowEventInfo.class);
                 intent.putExtra("eventName",data.getName());
                 intent.putExtra("eventDate",data.getDate());
                 intent.putExtra("eventMemo",data.getMemo());
                 intent.putExtra("eventId",data.getId());
-                ((MainCalander)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
+                ((SearchEvent)context).startActivityForResult(intent,MainCalander.SHOW_EVENT_INFO);
             }
         });
-    }
 
+    }
 
     @Override
     public int getItemCount() {
         return eventDataArrayList.size();
     }
-
 }
-class HorizontalViewHolder extends RecyclerView.ViewHolder {
+class VerticalSearchViewHolder extends RecyclerView.ViewHolder {
     public TextView name;
-    public TextView date;
-    HorizontalViewHolder(View view){
+    public TextView year;
+    public TextView month_day;
+    VerticalSearchViewHolder(View view){
         super(view);
-        name = (TextView) itemView.findViewById(R.id.item_name);
-        date = (TextView) itemView.findViewById(R.id.item_date);
+        name = (TextView) itemView.findViewById(R.id.text_eventName);
+        year = (TextView) itemView.findViewById(R.id.text_eventDate_year);
+        month_day = (TextView) itemView.findViewById(R.id.text_eventDate_month_day);
 
     }
 }

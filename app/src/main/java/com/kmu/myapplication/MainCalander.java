@@ -1,5 +1,6 @@
 package com.kmu.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -38,9 +39,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MainCalander extends AppCompatActivity {
-    static int ADD_EVENT = 0;
-    static int SHOW_EVENT_INFO = 1;
-    static int RESULT_REMOVE_EVENT = 101;
+    public static int ADD_EVENT = 0;
+    public static int SHOW_EVENT_INFO = 1;
+    public static int RESULT_REMOVE_EVENT = 101;
+    public static Context thisContext;
     private TextView ymdate;
     private Date selectedDate;
     private SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy 년 MM 월",Locale.KOREA);
@@ -68,6 +70,8 @@ public class MainCalander extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         ymdate = findViewById(R.id.ymdate);
+
+        thisContext = this;
 
         compactCalendarView =  (CompactCalendarView) findViewById(R.id.customcalendar_view);
         compactCalendarView.setLocale(TimeZone.getDefault(),Locale.KOREA);
@@ -168,6 +172,10 @@ public class MainCalander extends AppCompatActivity {
             String dateString = simpleDateFormat.format(selectedDate);
             intent.putExtra("selectedDate",dateString);
             startActivityForResult(intent,ADD_EVENT);
+        }
+        else if(id == R.id.action_search){
+            Intent intent = new Intent(this,SearchEvent.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
