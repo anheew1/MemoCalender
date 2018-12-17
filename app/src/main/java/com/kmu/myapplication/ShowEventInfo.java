@@ -65,7 +65,8 @@ public class ShowEventInfo extends Activity {
                 eventIntent.putExtra("eventName",eventName.getText().toString());
                 Log.d("name",eventName.getText().toString());
                 //add eventDate
-                eventIntent.putExtra("eventDate",date);
+                eventIntent.putExtra("eventDate",eventDate.getText().toString());
+                eventIntent.putExtra("oldDate",date);
                 //add eventMemo
                 EditText eventMemo = findViewById(R.id.edit_eventMemo);
                 eventIntent.putExtra("eventMemo",eventMemo.getText().toString());

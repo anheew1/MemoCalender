@@ -220,11 +220,13 @@ public class MainCalander extends AppCompatActivity {
         String eventName = extras.getString("eventName");
         String eventDate = extras.getString("eventDate");
         String eventMemo = extras.getString("eventMemo");
+        String oldDate = extras.getString("oldDate");
         try {
             Date newdate = simpleDateFormat.parse(eventDate);
+            Date oldParseDate = simpleDateFormat.parse(oldDate);
             db.execSQL("UPDATE events SET name = '"+eventName+"', date = '"+eventDate+
                     "', memo ='"+eventMemo+"' WHERE id ='"+eventId+"';");
-            for ( Event event : compactCalendarView.getEvents(newdate)){
+            for ( Event event : compactCalendarView.getEvents(oldParseDate)){
                 Bundle eventData = (Bundle) event.getData();
                 if(eventData.getInt("eventId") == eventId){
                     compactCalendarView.removeEvent(event);
