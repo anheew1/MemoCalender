@@ -20,6 +20,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -39,7 +40,7 @@ public class SearchEvent extends Activity {
 
         helper = new DBHelper(this);
         db = helper.getWritableDatabase();
-        cursor = db.rawQuery("SELECT *FROM events",null);
+
 
         ImageButton searchBtn = (ImageButton) findViewById(R.id.btn_eventSearch);
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +58,8 @@ public class SearchEvent extends Activity {
         if(requestCode == MainCalander.SHOW_EVENT_INFO){
             if(resultCode == RESULT_OK){
                 ((MainCalander)MainCalander.thisContext).updateEvent(data.getExtras());
-                showSearchResult(((EditText) findViewById(R.id.edit_search)).getText().toString());
+                EditText editText = findViewById(R.id.edit_search);
+                showSearchResult(editText.getText().toString());
             }
         }
     }
@@ -66,6 +68,7 @@ public class SearchEvent extends Activity {
         ArrayList<EventData> dataArrayList = new ArrayList<>();
         String[] searchArr = searchStr.split(" ");
         if(searchStr.equals("")) return;
+        cursor = db.rawQuery("SELECT *FROM events",null);
         while (cursor.moveToNext()){
             int id = cursor.getInt(0);
             String name = cursor.getString(1);
@@ -85,6 +88,10 @@ public class SearchEvent extends Activity {
                 Log.d("event is ",name);
             }
         }
+        dataArrayList.sort(dateComparator);
+
+        Log.d("da",String.valueOf(dataArrayList.size()));
+
 
         verticalLayout = (LinearLayout) findViewById(R.id.search_event_layout);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(verticalLayout.getContext());
@@ -96,6 +103,12 @@ public class SearchEvent extends Activity {
         verticalView.setLayoutManager(linearLayoutManager);
         verticalView.setAdapter(verticalAdapter);
     }
+    public static Comparator<EventData> dateComparator = new Comparator<EventData>() {
+        @Override
+        public int compare(EventData o1, EventData o2) {
+            return o1.getDate().compareTo(o2.getDate());
+        }
+    };
 
 
 }

@@ -66,7 +66,8 @@ public class MainCalander extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_dehaze_black_18dp);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home_36pt);
         getSupportActionBar().setTitle("");
 
         ymdate = findViewById(R.id.ymdate);
@@ -166,6 +167,12 @@ public class MainCalander extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if(id == android.R.id.home){
+            Date nowDate = new Date();
+            compactCalendarView.setCurrentDate(nowDate);
+            ymdate.setText(simpleMonthFormat.format(nowDate));
+            showRecyclerEvents(nowDate);
+        }
         if (id == R.id.action_addEvent){
             Intent intent = new Intent(this,AddEvent.class);
 
